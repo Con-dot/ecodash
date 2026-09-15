@@ -1,0 +1,84 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #3b2115;
+}
+
+canvas {
+  display: block;
+}
+
+/* HUD */
+#hud {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  font-family: monospace;
+  font-size: 22px;
+  font-weight: bold;
+
+  color: #f4dfb3;
+
+  z-index: 10;
+
+  text-shadow: 3px 3px 0 #3b2115;
+
+  pointer-events: none;
+}
+
+/* score boxes */
+#score,
+#highscore {
+  padding: 8px 14px;
+
+  background: #8f3f24;
+
+  border: 3px solid #d69a3a;
+
+  box-shadow: 4px 4px 0 #3b2115;
+
+  min-width: 190px;
+}
+
+
+/* highscore */
+#highscore {
+  background: #315c3a;
+  border-color: #d69a3a;
+}
+
+/* HUD title */
+#hud::before {
+  content: "ECODASH";
+
+  display: block;
+
+  margin-bottom: 2px;
+
+  color: #d69a3a;
+
+  font-size: 16px;
+  letter-spacing: 3px;
+}
+/* smaller screen */
+
+@media (max-width: 600px) {
+
+  #hud {
+    top: 12px;
+    left: 12px;
+    font-size: 16px;
+  }
+
+  #score,
+  #highscore {
+    min-width: 140px;
+    padding: 6px 10px;
+  }
+
+}
