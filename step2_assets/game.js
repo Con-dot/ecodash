@@ -22,9 +22,8 @@ const images = {
 
 // Tile settings //
 const TILE = 16;                 // each tile in tileset.png is 16 x 16 pixels
-const SCALE = 3;                 // draw them 3x bigger on screen
-const TILE_PX = TILE * SCALE;    // 48 pixels on screen
-
+const SCALE = 3;                 // draws them 3x bigger on screen
+const TILE_PX = TILE * SCALE;    // 
 // Player movement and camera //
 const player = {
   x: 0,
@@ -39,6 +38,23 @@ const player = {
 
 const camera = { x: 0 };         // how far the world has scrolled
 const keys = { w: false, a: false, d: false, space: false };
+
+// delivery package that must be delivered to clinic //
+const package = {
+  x: 100,
+  y: 0,
+  size: 32,
+  pickedUp: false
+};
+const clinic = {
+  x: 3000,
+  y: 0,
+  width: 100,
+  height: 100
+};
+// package position //
+package.y = groundTop() - package.size;
+let score = 0;
 
 window.addEventListener('keydown', e => {
   if (e.key.toLowerCase() === 'w') keys.w = true;
@@ -64,7 +80,6 @@ function groundTop() {
 }
 
 // bug fix to stop movement when leaving tab //
-
 window.addEventListener('blur', () => {
   keys.a = false;
   keys.d = false;
@@ -93,6 +108,19 @@ function update(dt) {
     player.onGround = false;
   }
 
+  // package position //
+package.y = groundTop() - package.size;
+
+// pick up package //
+if (!package.pickedUp &&
+    player.x < package.x + package.size &&
+    player.x + player.size > package.x &&
+    player.y < package.y + package.size &&
+    player.y + player.size > package.y) {
+
+  package.pickedUp = true;
+}
+
   // jumping //
   if ((keys.space) && player.onGround) {
     player.velocityY = -player.jumpPower;
@@ -103,8 +131,6 @@ function update(dt) {
 }
 
 // Drawing helpers //
-// Draw one tile: pick the square from the tileset (source), place it on the canvas (destination)
-
 function drawTile(row, col, x, y) {
   ctx.drawImage(images.tileset,
     col * TILE, row * TILE, TILE, TILE,
@@ -132,6 +158,82 @@ function drawGround() {
     drawTile(0, 1, x, groundTop());                 // grass top
     drawTile(1, 1, x, groundTop() + TILE_PX);       // dirt
     drawTile(1, 1, x, groundTop() + 2 * TILE_PX);   // dirt
+  }
+
+  // draw package //
+if (!package.pickedUp) {
+  const packageX = package.x - camera.x;
+
+  // box
+  ctx.fillStyle = '#c98b45';
+  ctx.fillRect(
+    packageX,
+    package.y,
+    package.size,
+    package.size
+  );
+
+  // tape
+  ctx.fillStyle = '#f4dfb3';
+  ctx.fillRect(
+    packageX + 13,
+    package.y,
+    6,
+    package.size
+  );
+
+  //  red cross
+  ctx.fillStyle = '#8f3f24';
+  ctx.fillRect(
+    packageX + 12,
+    package.y + 9,
+    8,
+    14
+  );
+
+  ctx.fillRect(
+    packageX + 9,
+    package.y + 12,
+    14,
+    8
+  );
+
+}
+if (package.pickedUp) {
+
+    ctx.fillStyle = '#c98b45';
+
+    ctx.fillRect(
+      player.x - camera.x + 4,
+      player.y - 32,
+      32,
+      32
+    );
+
+    ctx.fillStyle = '#f4dfb3';
+
+    ctx.fillRect(
+      player.x - camera.x + 17,
+      player.y - 32,
+      6,
+      32
+    );
+
+    ctx.fillStyle = '#8f3f24';
+
+    ctx.fillRect(
+      player.x - camera.x + 12,
+      player.y - 23,
+      16,
+      8
+    );
+
+    ctx.fillRect(
+      player.x - camera.x + 16,
+      player.y - 27,
+      8,
+      16
+    );
   }
 }
 
