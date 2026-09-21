@@ -1,0 +1,44 @@
+function generatePlatforms() {
+
+  // keep generating until there are platforms well past the right edge of the screen //
+  const generateUntil = camera.x + canvas.width + 600;
+
+  // do not build platforms too high for a small window //
+  const maxHeightTiles = Math.min(6, Math.max(2, Math.floor((groundTop() - 120) / TILE_PX)));
+
+  while (lastPlatformRight < generateUntil && lastPlatformRight < clinic.x) {
+
+    // new height: at most 2 tiles higher than the last one, so the jump can always reach it //
+    let heightTiles = lastHeightTiles + randomInt(-2, 2);
+    heightTiles = Math.max(2, Math.min(maxHeightTiles, heightTiles));
+
+    // gap: smaller when the next platform is higher (harder jump) //
+    const rise = heightTiles - lastHeightTiles;
+    let gap = rise > 0 ? randomInt(90, 150) : randomInt(90, 200);
+
+    // 1 in 4 times leave a long empty stretch, then start again from ground level //
+    // (no long stretches near the clinic, so platforms keep going until the end) //
+    if (Math.random() < 0.25 && lastHeightTiles > 0 && lastPlatformRight < clinic.x - 900) {
+      gap = randomInt(350, 700);
+      heightTiles = 2;
+    }
+
+    const x = lastPlatformRight + gap;
+
+    // the clinic is the end of the level: no platform may start past it or hang over it //
+    const roomTiles = Math.floor((clinic.x - x) / TILE_PX);
+    if (roomTiles < 3) {
+      lastPlatformRight = clinic.x;    // no room left, so stop generating
+      break;
+    }
+    const widthTiles = Math.min(randomInt(3, 6), roomTiles);
+
+    platforms.push({ x: x, heightTiles: heightTiles, widthTiles: widthTiles });
+
+    lastPlatformRight = x + widthTiles * TILE_PX;
+    lastHeightTiles = heightTiles;
+  }
+
+  // throw away platforms far behind the player //
+  platforms = platforms.filter(p => p.x + p.widthTiles * TILE_PX > camera.x - 300);
+}

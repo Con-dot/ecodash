@@ -1,0 +1,113 @@
+// delivery package that must be delivered to clinic //
+const deliveryPackage = {
+  x: 100,
+  y: 0,
+  size: 32,
+  pickedUp: false
+};
+
+const clinic = {
+  x: 30000,
+  y: 0,
+  width: 100,
+  height: 100
+};
+
+// package position //
+deliveryPackage.y = groundTop() - deliveryPackage.size;
+
+function updateDelivery() {
+
+  // package position //
+  deliveryPackage.y = groundTop() - deliveryPackage.size;
+
+  // pick up package //
+  if (!deliveryPackage.pickedUp &&
+      player.x < deliveryPackage.x + deliveryPackage.size &&
+      player.x + player.size > deliveryPackage.x &&
+      player.y < deliveryPackage.y + deliveryPackage.size &&
+      player.y + player.size > deliveryPackage.y) {
+
+    deliveryPackage.pickedUp = true;
+  }
+}
+
+// draw package //
+function drawDelivery() {
+
+  if (!deliveryPackage.pickedUp) {
+    const packageX = deliveryPackage.x - camera.x;
+
+    // box
+    ctx.fillStyle = '#c98b45';
+    ctx.fillRect(
+      packageX,
+      deliveryPackage.y,
+      deliveryPackage.size,
+      deliveryPackage.size
+    );
+
+    // tape
+    ctx.fillStyle = '#f4dfb3';
+    ctx.fillRect(
+      packageX + 13,
+      deliveryPackage.y,
+      6,
+      deliveryPackage.size
+    );
+
+    // little red cross
+    ctx.fillStyle = '#8f3f24';
+    ctx.fillRect(
+      packageX + 12,
+      deliveryPackage.y + 9,
+      8,
+      14
+    );
+
+    ctx.fillRect(
+      packageX + 9,
+      deliveryPackage.y + 12,
+      14,
+      8
+    );
+  }
+
+  // make package appear on top of player head //
+  if (deliveryPackage.pickedUp) {
+
+    ctx.fillStyle = '#c98b45';
+
+    ctx.fillRect(
+      player.x - camera.x + 4,
+      player.y - 32,
+      32,
+      32
+    );
+
+    ctx.fillStyle = '#f4dfb3';
+
+    ctx.fillRect(
+      player.x - camera.x + 17,
+      player.y - 32,
+      6,
+      32
+    );
+
+    ctx.fillStyle = '#8f3f24';
+
+    ctx.fillRect(
+      player.x - camera.x + 12,
+      player.y - 23,
+      16,
+      8
+    );
+
+    ctx.fillRect(
+      player.x - camera.x + 16,
+      player.y - 27,
+      8,
+      16
+    );
+  }
+}

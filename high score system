@@ -1,0 +1,30 @@
+let score = 0;
+let highScore = localStorage.getItem('ecoDashHighScore') || 0;
+let furthestX = 0;
+
+// distance score //
+function updateScore() {
+
+  if (player.x > furthestX) {
+    furthestX = player.x;
+    score = Math.floor(furthestX / 10);
+
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem('ecoDashHighScore', highScore);
+    }
+  }
+
+  document.getElementById('score').textContent =
+    'SCORE: ' + String(score).padStart(6, '0');
+
+  document.getElementById('highscore').textContent =
+    'HIGH SCORE: ' + String(highScore).padStart(6, '0');
+
+  // clinic distance bar //
+  const distance = Math.max(0, clinic.x - player.x);
+  const totalDistance = clinic.x;
+  const progress = Math.min(100, Math.max(0, ((totalDistance - distance) / totalDistance) * 100));
+
+  document.getElementById('distanceFill').style.width = progress + '%';
+}

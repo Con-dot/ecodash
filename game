@@ -1,0 +1,44 @@
+// drawing //
+function draw() {
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  drawParallax(images.sky, 0);                 // far layers move slowly (0 = doesn't move)
+  drawParallax(images.clouds2, 0.05);
+  drawParallax(images.clouds1, 0.15);
+  drawParallax(images.hills, 0.4);             // closer layers move faster
+
+  drawGround();
+  drawPlatforms();
+
+  drawDelivery();
+
+  ctx.fillStyle = 'orange';
+  ctx.fillRect(player.x - camera.x, player.y, player.size, player.size);
+}
+
+// game update //
+function update(dt) {
+  updatePlayer(dt);
+  updateDelivery();
+  updateScore();
+}
+
+let lastTime = performance.now();
+
+function loop(now) {
+  const dt = Math.min(0.05, (now - lastTime) / 1000);   // cap so big lag cant push us through platforms
+  lastTime = now;
+
+  update(dt);
+  draw();
+
+  requestAnimationFrame(loop);
+}
+
+// start the player standing on the ground //
+
+player.y = groundTop() - player.size;
+player.onGround = true;
+
+requestAnimationFrame(loop);

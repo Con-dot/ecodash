@@ -1,0 +1,108 @@
+// Player movement //
+const player = {
+  x: 0,
+  y: 0,
+  size: 40,
+  speed: 300,
+  velocityY: 0,
+  gravity: 1400,
+  jumpPower: 600,
+  onGround: false
+};
+
+const keys = { w: false, a: false, d: false, space: false };
+
+window.addEventListener('keydown', e => {
+  if (e.key.toLowerCase() === 'w') keys.w = true;
+  if (e.key.toLowerCase() === 'a') keys.a = true;
+  if (e.key.toLowerCase() === 'd') keys.d = true;
+
+  if (e.code === 'Space') {
+    keys.space = true;
+    e.preventDefault();
+  }
+});
+
+window.addEventListener('keyup', e => {
+  if (e.key.toLowerCase() === 'w') keys.w = false;
+  if (e.key.toLowerCase() === 'a') keys.a = false;
+  if (e.key.toLowerCase() === 'd') keys.d = false;
+
+  if (e.code === 'Space') keys.space = false;
+});
+
+// bug fix to stop movement when leaving tab //
+window.addEventListener('blur', () => {
+  keys.a = false;
+  keys.d = false;
+  keys.w = false;
+  keys.space = false;
+});
+
+function updatePlayer(dt) {
+
+  // horizontal movement //
+  if (keys.a) player.x -= player.speed * dt;
+  if (keys.d) player.x += player.speed * dt;
+
+  // platform sides: if we walked into a platform, push back out //
+  for (const platform of platforms) {
+    const box = platformBox(platform);
+
+    // the 2 pixel margin stops us counting the platform we are standing on //
+    const touching =
+      player.x < box.x + box.width &&
+      player.x + player.size > box.x &&
+      player.y + player.size > box.y + 2 &&
+      player.y < box.y + box.height - 2;
+
+    if (touching) {
+      if (keys.d) player.x = box.x - player.size;        // hit the left side
+      else if (keys.a) player.x = box.x + box.width;     // hit the right side
+    }
+  }
+
+  // gravity //
+  player.velocityY += player.gravity * dt;
+  player.y += player.velocityY * dt;
+  player.onGround = false;
+
+  // platform top and bottom //
+  for (const platform of platforms) {
+    const box = platformBox(platform);
+
+    const overlapping =
+      player.x < box.x + box.width &&
+      player.x + player.size > box.x &&
+      player.y < box.y + box.height &&
+      player.y + player.size > box.y;
+
+    if (overlapping) {
+      if (player.velocityY > 0) {              // falling: land on top
+        player.y = box.y - player.size;
+        player.velocityY = 0;
+        player.onGround = true;
+      } else if (player.velocityY < 0) {       // rising: bump our head
+        player.y = box.y + box.height;
+        player.velocityY = 0;
+      }
+    }
+  }
+
+  // ground collision //
+  const floorY = groundTop() - player.size;
+
+  if (player.y >= floorY) {
+    player.y = floorY;
+    player.velocityY = 0;
+    player.onGround = true;
+  }
+
+  // jumping //
+  if ((keys.space) && player.onGround) {
+    player.velocityY = -player.jumpPower;
+    player.onGround = false;
+  }
+
+  camera.x = player.x - canvas.width / 2;
+}

@@ -52,6 +52,34 @@ canvas {
   border-color: #d69a3a;
 }
 
+/* distance meter to clinic */
+#distance {
+  padding: 8px 14px;
+  background: #315c3a;
+  border: 3px solid #d69a3a;
+  box-shadow: 4px 4px 0 #3b2115;
+  min-width: 190px;
+}
+
+#distanceLabel {
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+
+#distanceBar {
+  width: 100%;
+  height: 18px;
+  background: #3b2115;
+  border: 2px solid #f4dfb3;
+  box-sizing: border-box;
+}
+
+#distanceFill {
+  width: 0%;
+  height: 100%;
+  background: #d69a3a;
+}
+
 /* HUD title */
 #hud::before {
   content: "ECODASH";
