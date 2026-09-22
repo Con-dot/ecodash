@@ -1,0 +1,94 @@
+// game states: playing won over //
+const TIME_LIMIT = 45;            // seconds the player has to reach the clinic
+let gameState = 'playing';        // 'playing', 'won' or 'over'
+let timeLeft = TIME_LIMIT;
+
+// countdown timer //
+function updateTimer(dt) {
+  timeLeft = Math.max(0, timeLeft - dt);
+  document.getElementById('timer').textContent = 'TIME: ' + Math.ceil(timeLeft);
+
+  if (timeLeft <= 0) {
+    endGame(false, 'You ran out of time!');
+  }
+}
+
+// has the courier reached the clinic door  //
+function checkClinicReached() {
+  const playerMiddle = player.x + player.size / 2;
+  if (playerMiddle < clinic.x + clinic.width / 2) return;
+
+  if (deliveryPackage.pickedUp) {
+    endGame(true, 'Package delivered!');
+  } else {
+    endGame(false, 'You reached the clinic without the package!');
+  }
+}
+
+// show the end screen //
+function endGame(won, reason) {
+  gameState = won ? 'won' : 'over';
+
+  // time bonus for delivering the package //
+  if (won) {
+    score += Math.ceil(timeLeft) * 10;
+  }
+
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem('ecoDashHighScore', highScore);
+  }
+
+  document.getElementById('gameOverTitle').textContent = won ? 'DELIVERED!' : 'GAME OVER';
+  document.getElementById('gameOverReason').textContent = reason;
+  document.getElementById('gameOverScore').textContent = 'SCORE: ' + String(score).padStart(6, '0');
+  document.getElementById('gameOverHigh').textContent = 'HIGH SCORE: ' + String(highScore).padStart(6, '0');
+  document.getElementById('gameOver').classList.remove('hidden');
+}
+
+// start again without refreshing the page //
+function resetGame() {
+
+  // player back at the start //
+  player.x = 0;
+  player.y = groundTop() - player.size;
+  player.velocityY = 0;
+  player.onGround = true;
+  keys.a = false;
+  keys.d = false;
+  keys.w = false;
+  keys.space = false;
+
+  // new random platforms //
+  platforms = [];
+  lastPlatformRight = 400;
+  lastHeightTiles = 0;
+
+  // package back on the ground, score back to zero //
+  deliveryPackage.pickedUp = false;
+  score = 0;
+  furthestX = 0;
+
+  // clear sky again (only if weather.js is loaded) //
+  if (typeof weather !== 'undefined') {
+    weather.rain = 0;
+    weather.target = 0;
+    weather.timer = 6;
+    weather.flash = 0;
+    weather.bolt = null;
+  }
+
+  timeLeft = TIME_LIMIT;
+  gameState = 'playing';
+  document.getElementById('gameOver').classList.add('hidden');
+}
+
+// restart with the button or the Enter key //
+document.getElementById('restartButton').addEventListener('click', e => {
+  e.target.blur();                 // so pressing Space afterwards does not press the button again
+  resetGame();
+});
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && gameState !== 'playing') resetGame();
+});
