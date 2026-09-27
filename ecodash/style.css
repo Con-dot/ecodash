@@ -8,7 +8,7 @@ canvas {
   display: block;
 }
 
-/* HUD */
+/* hud */
 #hud {
   position: fixed;
   top: 20px;
@@ -80,7 +80,7 @@ canvas {
   background: #d69a3a;
 }
 
-/* HUD title */
+/* hud title */
 #hud::before {
   content: "ECODASH";
 
@@ -110,3 +110,369 @@ canvas {
   }
 
 }
+
+/* extra hud boxes */
+#timer {
+  padding: 8px 14px;
+  background: #8f3f24;
+  border: 3px solid #d69a3a;
+  box-shadow: 4px 4px 0 #3b2115;
+  min-width: 190px;
+}
+
+#energy {
+  padding: 8px 14px;
+  background: #315c3a;
+  border: 3px solid #d69a3a;
+  box-shadow: 4px 4px 0 #3b2115;
+  min-width: 190px;
+}
+
+#energyLabel {
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+
+#energyBar {
+  width: 100%;
+  height: 18px;
+  background: #3b2115;
+  border: 2px solid #f4dfb3;
+  box-sizing: border-box;
+}
+
+#energyFill {
+  width: 100%;
+  height: 100%;
+  background: #6fd2e8;
+}
+
+#energyFill.exhausted {
+  background: #c0392b;       /* red while recharging after running dry */
+}
+
+/* overlays: menu, coin flip, game over */
+.hidden {
+  display: none !important;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(59, 33, 21, 0.78);
+  font-family: monospace;
+  color: #f4dfb3;
+  text-shadow: 3px 3px 0 #3b2115;
+}
+
+.panel {
+  max-width: 480px;
+  padding: 24px 36px 28px;
+  text-align: center;
+
+  background: #8f3f24;
+  border: 4px solid #d69a3a;
+  box-shadow: 8px 8px 0 #3b2115;
+}
+
+.panel h1 {
+  margin: 0 0 8px;
+  font-size: 56px;
+  letter-spacing: 8px;
+  color: #d69a3a;
+}
+
+.panel h2 {
+  margin: 0 0 8px;
+  font-size: 38px;
+  letter-spacing: 4px;
+  color: #d69a3a;
+}
+
+.tagline {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+
+.controls {
+  margin: 0 0 20px;
+  padding: 12px;
+  font-size: 16px;
+  line-height: 1.9;
+  text-align: left;
+  background: #315c3a;
+  border: 3px solid #d69a3a;
+}
+
+.key {
+  display: inline-block;
+  min-width: 18px;
+  padding: 0 6px;
+  text-align: center;
+  color: #3b2115;
+  text-shadow: none;
+  background: #f4dfb3;
+  border-bottom: 3px solid #d69a3a;
+}
+
+.btn {
+  margin-top: 6px;
+  padding: 10px 34px;
+
+  font-family: monospace;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: #f4dfb3;
+  text-shadow: 3px 3px 0 #3b2115;
+
+  background: #315c3a;
+  border: 3px solid #d69a3a;
+  box-shadow: 4px 4px 0 #3b2115;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #3f7449;
+}
+
+.btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 #3b2115;
+}
+
+.hint {
+  margin: 10px 0 0;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+#gameOverScore,
+#gameOverHigh {
+  margin: 4px 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+#gameOverHigh {
+  margin-bottom: 16px;
+}
+
+/* the coin */
+#coinScene {
+  height: 190px;
+  perspective: 700px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+#coinWrap {
+  width: 110px;
+  height: 110px;
+  animation: coinToss 1.8s ease-out forwards;
+}
+
+#coin {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  transform-style: preserve-3d;
+}
+
+#coin.spinning {
+  animation: coinSpin 1.8s ease-out forwards;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 54px;
+  font-weight: bold;
+  color: #8f3f24;
+  text-shadow: none;
+
+  background: #d69a3a;
+  border: 6px solid #f4dfb3;
+  border-radius: 50%;
+  box-sizing: border-box;
+  backface-visibility: hidden;
+}
+
+.face.tails {
+  transform: rotateY(180deg);
+  background: #c98b45;
+}
+
+@keyframes coinSpin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(var(--end, 1800deg)); }
+}
+
+@keyframes coinToss {
+  0%   { transform: translateY(0); }
+  45%  { transform: translateY(-80px); }
+  100% { transform: translateY(0); }
+}
+
+.coinText {
+  margin: 14px 0 0;
+  min-height: 28px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .panel { max-width: 88vw; padding: 16px 18px 20px; }
+  .panel h1 { font-size: 38px; letter-spacing: 4px; }
+  .panel h2 { font-size: 28px; }
+  .controls { font-size: 14px; }
+}
+
+/* lives */
+#lives {
+  padding: 8px 14px;
+  background: #8f3f24;
+  border: 3px solid #d69a3a;
+  box-shadow: 4px 4px 0 #3b2115;
+  min-width: 190px;
+}
+
+#livesLabel {
+  margin-right: 8px;
+}
+
+.heart {
+  color: #ff4d4d;
+  margin-right: 2px;
+}
+
+.heart.lost {
+  color: #3b2115;
+  text-shadow: none;
+}
+
+/* message at the top of the screen */
+#toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+
+  padding: 10px 22px;
+  font-family: monospace;
+  font-size: 22px;
+  font-weight: bold;
+  color: #f4dfb3;
+  text-shadow: 3px 3px 0 #3b2115;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  background: #8f3f24;
+  border: 3px solid #d69a3a;
+  box-shadow: 4px 4px 0 #3b2115;
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  #lives { min-width: 140px; padding: 6px 10px; }
+  #toast { font-size: 14px; white-space: normal; text-align: center; width: 80vw; }
+}
+
+
+/* kente strip on the panels */
+.panel {
+  position: relative;
+}
+
+.panel::before,
+#toast::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: repeating-linear-gradient(90deg,
+    #d69a3a 0 14px, #b3261e 14px 28px, #1e1e1e 28px 34px, #315c3a 34px 48px, #1e1e1e 48px 54px);
+}
+
+#toast {
+  padding-top: 16px;
+}
+
+/* high score page */
+#scoreTable {
+  width: 100%;
+  margin: 10px 0 16px;
+  font-size: 20px;
+  border-collapse: collapse;
+  background: #315c3a;
+  border: 3px solid #d69a3a;
+}
+
+#scoreTable td {
+  padding: 4px 12px;
+}
+
+#scoreTable td:first-child { text-align: left; width: 40px; }
+#scoreTable td:nth-child(2) { text-align: left; }
+#scoreTable td:last-child { text-align: right; }
+
+#scoreTable tr.mine {
+  background: #d69a3a;
+  color: #3b2115;
+  text-shadow: none;
+}
+
+#nameRow {
+  margin-bottom: 8px;
+}
+
+#nameInput {
+  width: 130px;
+  padding: 8px;
+  font-family: monospace;
+  font-size: 22px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  color: #3b2115;
+  background: #f4dfb3;
+  border: 3px solid #d69a3a;
+}
+
+.btn.small {
+  padding: 8px 16px;
+  font-size: 20px;
+  margin-top: 0;
+}
+
+
+/* difficulty buttons */
+.btn.wide {
+  width: 100%;
+  margin-top: 12px;
+  font-size: 22px;
+}
+
+.dist {
+  display: block;
+  font-size: 14px;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+#scoreTable td:nth-child(3) { font-size: 14px; opacity: 0.8; }
+#scoreTable td:last-child { text-align: right; }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>EcoDash - Step 2: Tiles and backgrounds</title>
+  <title>EcoDash</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -10,6 +10,15 @@
   <div id="hud">
     <div id="score">SCORE: 000000</div>
     <div id="highscore">HIGH SCORE: 000000</div>
+    <div id="timer">TIME: 45</div>
+    <div id="lives"><span id="livesLabel">LIVES</span> <span id="hearts"></span></div>
+
+    <div id="energy">
+      <div id="energyLabel">BOOST [SHIFT] - solar pads</div>
+      <div id="energyBar">
+        <div id="energyFill"></div>
+      </div>
+    </div>
 
     <div id="distance">
       <div id="distanceLabel">CLINIC</div>
@@ -21,11 +30,102 @@
 
   <canvas id="gameCanvas"></canvas>
 
+  <!-- messages -->
+  <div id="toast" class="hidden"></div>
+
+  <!-- menu -->
+  <div id="menu" class="overlay">
+    <div class="panel">
+      <h1>ECODASH</h1>
+      <p class="tagline">Karibu, courier! Grab the medical package and deliver it to the clinic before time runs out!</p>
+
+      <div class="controls">
+        <div><span class="key">A</span> <span class="key">D</span> move</div>
+        <div><span class="key">SPACE</span> / <span class="key">W</span> jump</div>
+        <div><span class="key">SHIFT</span> hold to boost forward</div>
+        <div>Boost only charges on <b>solar pads</b> on the ground.</div>
+        <div>Jump on enemies or boost through them!</div>
+        <div>Dodge water holes, spikes, flying crates and falling rocks!</div>
+        <div>The timer only starts once you pick up the package.</div>
+        <div>You have 3 lives. <span class="key">M</span> mute</div>
+      </div>
+
+      <button id="playButton" class="btn">PLAY</button>
+      <p class="hint">or press ENTER</p>
+      <p id="menuHigh" class="hint">HIGH SCORE: 000000</p>
+    </div>
+  </div>
+
+  <!-- difficulty -->
+  <div id="difficulty" class="overlay hidden">
+    <div class="panel">
+      <h2>PICK A ROUTE</h2>
+      <p class="tagline">How far away is the clinic?</p>
+      <button id="easyButton" class="btn wide">1 - EASY <span class="dist">3000</span></button><br>
+      <button id="mediumButton" class="btn wide">2 - MEDIUM <span class="dist">30000</span></button><br>
+      <button id="hardButton" class="btn wide">3 - HARD <span class="dist">50000</span></button>
+      <p class="hint">click one or press 1, 2 or 3</p>
+    </div>
+  </div>
+
+  <!-- coin thing -->
+  <div id="coinflip" class="overlay hidden">
+    <div class="panel">
+      <h2>YOU DIED</h2>
+      <p id="coinReason" class="tagline"></p>
+
+      <div id="coinScene">
+        <div id="coinWrap">
+          <div id="coin">
+            <div class="face heads">H</div>
+            <div class="face tails">T</div>
+          </div>
+        </div>
+      </div>
+
+      <p id="coinText" class="coinText">Flipping the coin...</p>
+      <p class="hint">Last life lost! Heads: extra life &nbsp;|&nbsp; Tails: game over</p>
+      <button id="coinButton" class="btn hidden">CONTINUE</button>
+    </div>
+  </div>
+
+  <!-- game over screen -->
+  <div id="gameOver" class="overlay hidden">
+    <div class="panel">
+      <h2 id="gameOverTitle">GAME OVER</h2>
+      <p id="gameOverReason" class="tagline"></p>
+      <p id="gameOverScore">SCORE: 000000</p>
+      <p id="gameOverHigh">HIGH SCORE: 000000</p>
+      <button id="scoresButton" class="btn">HIGH SCORES</button>
+      <p class="hint">or press ENTER</p>
+    </div>
+  </div>
+
+  <!-- high scores, last screen -->
+  <div id="highscores" class="overlay hidden">
+    <div class="panel">
+      <h2>HIGH SCORES</h2>
+      <p id="newScoreText" class="tagline hidden">New high score! Enter your name:</p>
+      <div id="nameRow" class="hidden">
+        <input id="nameInput" type="text" maxlength="8" placeholder="NAME" autocomplete="off">
+        <button id="saveScoreButton" class="btn small">SAVE</button>
+      </div>
+      <table id="scoreTable"></table>
+      <button id="restartButton" class="btn">PLAY AGAIN</button>
+      <p class="hint">or press ENTER</p>
+    </div>
+  </div>
+
  <script src="js/world.js"></script>
 <script src="js/platforms.js"></script>
 <script src="js/player.js"></script>
+<script src="js/enemies.js"></script>
 <script src="js/package.js"></script>
+<script src="js/hazards.js"></script>
+<script src="js/solar.js"></script>
 <script src="js/high score system.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/gamestate.js"></script>
 <script src="js/game.js"></script>
 
 </body>
