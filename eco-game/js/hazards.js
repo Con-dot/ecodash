@@ -1,4 +1,4 @@
-/// hazards fix later maybe
+// hazards fix later maybe
 // spikes:       sit on the ground. Jump over them
 // flying crate: flies in from the right at three heights. Jump the low ones, stay low under
 // the middle ones took me ages

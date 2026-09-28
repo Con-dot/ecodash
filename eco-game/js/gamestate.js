@@ -1,4 +1,4 @@
-// game states:'menu, playing, coinflip, won, over, scores
+// game states: 'menu', 'playing', 'coinflip', 'won', 'over', 'scores'
 var TIME_LIMIT = 45;  // gets changed by the difficulty  // seconds the playr has to reach the clinic
 var MAX_LIVES = 3;  // lives at the start of a run
 var RESPAWN_INVULN = 2.5;  // seconds of protection after losing a life
